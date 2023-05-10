@@ -1,0 +1,15 @@
+.box {
+    background-color: orchid;
+    padding: 1rem;
+    border-radius: 8px;
+  }
+
+.header {
+    color: black;
+    text-transform: uppercase;
+    font-family: cursive;
+}
+
+.paragraph {
+    margin: 0;
+}

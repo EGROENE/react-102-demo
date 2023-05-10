@@ -1,0 +1,14 @@
+.box {
+    background-color: lightsalmon;
+    padding: 1rem;
+    border-radius: 8px;
+  }
+
+.header {
+    color: black;
+    text-transform: uppercase;
+}
+
+.paragraph {
+    margin: 0;
+}

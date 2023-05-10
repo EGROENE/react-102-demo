@@ -1,0 +1,12 @@
+#container {
+    background-color: darkseagreen;
+    border: 1rem dotted tan;
+}
+
+.header {
+    font-size: 50px;
+}
+
+.bodyText {
+    font-size: 25px;
+}
