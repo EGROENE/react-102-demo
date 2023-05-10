@@ -136,7 +136,7 @@ class Form extends React.Component {
       // RegExp.prototype.test would return this boolean
       // Maybe put regex patterns in array of objects whose elems correspond w/ values in cardData
       if (!cardData[value].length) {
-        errorValue = { ...errorValue, [`${value}Error`]: "Required" };
+        errorValue = { ...errorValue, [`${value}Error`]: "Input Required" };
         isError = true;
       }
       console.log(cardData);
@@ -153,12 +153,18 @@ class Form extends React.Component {
           onlyTextValidation(cardData[value]) ===
           "Please enter alphabetical letters only"
         ) {
-          errorValue = { ...errorValue, [`${value}Error`]: "Required" };
+          errorValue = {
+            ...errorValue,
+            [`${value}Error`]: "Please enter alphabetical letters only",
+          };
           isError = true;
         }
       } else if (inputType === "expiry") {
         if (cardExpireValidation(cardData[value]) === "Invalid date format") {
-          errorValue = { ...errorValue, [`${value}Error`]: "Required" };
+          errorValue = {
+            ...errorValue,
+            [`${value}Error`]: "Invalid date format",
+          };
           isError = true;
         }
       } else if (inputType === "securityCode") {
@@ -166,7 +172,10 @@ class Form extends React.Component {
           securityCodeValidation(3, cardData[value]) ===
           "Must be at least 3 characters"
         ) {
-          errorValue = { ...errorValue, [`${value}Error`]: "Required" };
+          errorValue = {
+            ...errorValue,
+            [`${value}Error`]: "Must be at least 3 characters",
+          };
           isError = true;
         }
       }
