@@ -45,9 +45,7 @@ export const cardExpireValidation = (value) => {
       let visaDate = new Date(`20${visaValue[1]}`, visaValue[0]);
       console.log(visaDate);
       console.log(moment(visaDate));
-      return currentDate < moment(visaDate)
-        ? undefined
-        : "Please enter a valid date";
+      return currentDate < moment(visaDate) ? undefined : "Invalid date format";
     } else {
       return "Invalid date format";
     }
