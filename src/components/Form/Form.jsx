@@ -7,6 +7,7 @@ import {
   cardNumberValidation,
   onlyTextValidation,
   securityCodeValidation,
+  validationTypes,
 } from "../validations";
 
 const INIT_CARD = {
@@ -59,21 +60,15 @@ class Form extends React.Component {
             cardError: errorText,
           },
         }));
-        // Set state cardType, error handling
         break;
       case "cardHolder":
-        // Check for spaces & numbers
         errorText = onlyTextValidation(value);
         // Since we're updating error object, access prev state:
         this.setState((prevState) => ({
           error: { ...prevState.error, cardHolderError: errorText },
         }));
-        // Set state error
         break;
       case "expiry":
-        // Check date format
-        // setState error
-        // Since we're updating error object, access prev state:
         errorText = cardExpireValidation(value);
         this.setState((prevState) => ({
           error: { ...prevState.error, expiryError: errorText },
@@ -124,59 +119,26 @@ class Form extends React.Component {
 
   checkErrorBeforeAddingCard = () => {
     const { cardData } = this.state;
-    console.log(cardData);
     let errorValue = {};
     let isError = false;
     Object.keys(cardData).forEach((value) => {
-      console.log(cardData[value]);
       let inputType = this.getKeyByValue(cardData, cardData[value]);
-      console.log(inputType);
-      // BUG HAS TO DO W/ THIS CONDITION. IF FILLED IN ERRONEOUSLY, IT STILL PASSES THIS TEST OF LENGTH, SO TEST IT BASED ON SOMETHING ELSE.
-      // Maybe do boolean to see if the field fits its regex pattern.
-      // RegExp.prototype.test would return this boolean
-      // Maybe put regex patterns in array of objects whose elems correspond w/ values in cardData
       if (!cardData[value].length) {
         errorValue = { ...errorValue, [`${value}Error`]: "Input Required" };
         isError = true;
       }
-      console.log(cardData);
-      if (inputType === "card") {
-        if (
-          cardNumberValidation(cardData[value]) ===
-          "Please enter a valid card number"
-        ) {
-          errorValue = { ...errorValue, [`${value}Error`]: "Required" };
-          isError = true;
-        }
-      } else if (inputType === "cardHolder") {
-        if (
-          onlyTextValidation(cardData[value]) ===
-          "Please enter alphabetical letters only"
-        ) {
-          errorValue = {
-            ...errorValue,
-            [`${value}Error`]: "Please enter alphabetical letters only",
-          };
-          isError = true;
-        }
-      } else if (inputType === "expiry") {
-        if (cardExpireValidation(cardData[value]) === "Invalid date format") {
-          errorValue = {
-            ...errorValue,
-            [`${value}Error`]: "Invalid date format",
-          };
-          isError = true;
-        }
-      } else if (inputType === "securityCode") {
-        if (
-          securityCodeValidation(3, cardData[value]) ===
-          "Must be at least 3 characters"
-        ) {
-          errorValue = {
-            ...errorValue,
-            [`${value}Error`]: "Must be at least 3 characters",
-          };
-          isError = true;
+      for (let validation of validationTypes) {
+        if (validation.inputType === inputType) {
+          if (
+            validation.validationMethod(cardData[value]) ===
+            validation.errorMessage
+          ) {
+            errorValue = {
+              ...errorValue,
+              [`${value}Error`]: validation.errorMessage,
+            };
+            isError = true;
+          }
         }
       }
     });
@@ -190,13 +152,8 @@ class Form extends React.Component {
     const errorCheck = this.checkErrorBeforeAddingCard();
     console.log(errorCheck);
     if (!errorCheck) {
-      console.log("submitted");
       this.setState({ cardData: INIT_CARD, cardType: null });
-    } /* else {
-      this.setState((prevState) => ({
-        error: { ...prevState.error },
-      }));
-    } */
+    }
   };
 
   render() {
